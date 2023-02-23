@@ -27,6 +27,6 @@ RUN npm init -y && npm install puppeteer yargs
 # 复制程序文件到容器中
 COPY ./http.js ./cmd.js /app/
 # 暴露端口
-EXPOSE 80
+EXPOSE 8080
 #容器启动执行命令
 ENTRYPOINT ["node","http.js"]

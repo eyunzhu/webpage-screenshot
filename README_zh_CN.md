@@ -29,7 +29,7 @@ A Docker image for web page screenshot ,add watermark and related services, supp
 ### 2. 运行容器
 
 ```shell
-docker run -d -p 1234:80 --cap-add SYS_ADMIN --name screenshot-service eyunzhu/webpage-screenshot
+docker run -d -p 1234:8080 --cap-add SYS_ADMIN --name screenshot-service eyunzhu/webpage-screenshot
 ```
 
 该镜像的工作目录为`/app`，本地可挂载目录`/app/data`，用作保存截图的目录，(即请求参数`p`可以设置为`data`)
@@ -137,7 +137,7 @@ cd webpage-screenshot
 
    ```javascript
    // 运行脚本前先修改 http.js 脚本中的 HTTP 服务端口和 Google Chrome Stable 路径
-   const port = 80;
+   const port = 8080;
    const browser = await puppeteer.launch({
          // 此路径请根据系统中安装 Google Chrome Stable 的实际情况更改；Mac 下安装了 Chrome 浏览器时，可注释掉不写
          //executablePath:'/usr/bin/google-chrome-stable',

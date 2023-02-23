@@ -29,7 +29,7 @@ There are two ways to get the image:
 ### 2. Run the Container
 
 ```shell
-docker run -d -p 1234:80 --cap-add SYS_ADMIN --name screenshot-service eyunzhu/webpage-screenshot
+docker run -d -p 1234:8080 --cap-add SYS_ADMIN --name screenshot-service eyunzhu/webpage-screenshot
 ```
 
 The working directory of the image is `/app`. You can mount a local directory `/app/data` to store the screenshots. (You can set the request parameter `p` to `data`)
@@ -135,7 +135,7 @@ cd webpage-screenshot
 
    ```javascript
    // Before running the script, modify the http.js script with the http server port and the path to google-chrome-stable
-   const port = 80;
+   const port = 8080;
    const browser = await puppeteer.launch({
      		// Modify the path based on the actual installation of google-chrome-stable on your system. If you have installed Chrome on a Mac, you can comment out this line.
          //executablePath:'/usr/bin/google-chrome-stable',
