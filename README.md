@@ -1,8 +1,8 @@
 # [webpage-screenshot](https://github.com/eyunzhu/webpage-screenshot)
 
-A Docker image for web page screenshot and related services, supporting both command line and HTTP interface. Implemented with node, puppeteer and chrome headless
+A Docker image for web page screenshot,add watermark and related services, supporting both command line and HTTP interface. Implemented with node, puppeteer and chrome headless
 
-对目标网页进行截图服务，支持命令行和HTTP方式，使用node,puppeteer和chrome headless技术实现。
+对目标网页进行截图,添加水印等服务，支持命令行和HTTP方式，使用node,puppeteer和chrome headless技术实现。
 
 **[中文文档](https://github.com/eyunzhu/webpage-screenshot/blob/master/README_zh_CN.md)**
 
@@ -43,14 +43,14 @@ Two methods are available:
    Use the following URL to get the screenshot of the specified website:
 
    ```
-   http://ip:{port}/?url=https://eyunzhu.com
+   http://ip:{port}/?u=https://eyunzhu.com
    ```
 
    #### Request Parameters
 
    | Parameter | Description                                                  | 默认                |
    | --------- | ------------------------------------------------------------ | ------------------- |
-   | url       | Target URL                                                   | https://eyunzhu.com |
+   | u         | Target URL                                                   | https://eyunzhu.com |
    | w         | Screenshot width                                             | 1470                |
    | h         | Screenshot height                                            | 780                 |
    | q         | Screenshot quality percentage                                | 100                 |
@@ -58,6 +58,9 @@ Two methods are available:
    | p         | Server save path (if not empty, save image to this path on server, ensure path exists) |                     |
    | n         | Image name                                                   | screenshot.jpeg     |
    | f         | If not empty,capture full page                               |                     |
+   | t         | Watermark text (use `a` parameter to customize styles).      |                     |
+   | i         | URL of the watermark image (use `a` parameter to customize styles). |                     |
+   | a         | Add other elements (can be used to add watermarks, etc., with wide flexibility)<br/>Example: <br/>\`<div style="width:100%;height: 100%;position: absolute;top:0;left:0;z-index: 9999;background-color: rgba(220, 210, 210, 0.18);"><h1>eyunzhu</h1><p style="color:#4d85ff">Welcome to use</p></div>\` |                     |
 
 2. Command-Line Interface
 
@@ -71,16 +74,46 @@ Two methods are available:
    
    ```shell
    Options:
-         --version   Show version number                                  [boolean]
-     -u, --url       URL to screenshot    [string] [default: "https://eyunzhu.com"]
-     -w, --width     Viewport width                        [number] [default: 1470]
-     -h, --height    Viewport height                        [number] [default: 780]
-     -q, --quality   Screenshot quality                     [number] [default: 100]
-     -p, --path      Directory to save screenshot        [string] [default: "data"]
-     -n, --name      Screenshot file name     [string] [default: "screenshot.jpeg"]
-     -f, --fullPage  Capture full page                   [boolean] [default: false]
-         --help      Show help                                            [boolean]
+         --version      Show version number                               [boolean]
+     -u, --url          URL to screenshot [string] [default: "https://eyunzhu.com"]
+     -w, --width        Viewport width                     [number] [default: 1470]
+     -h, --height       Viewport height                     [number] [default: 780]
+     -q, --quality      Screenshot quality                  [number] [default: 100]
+     -p, --path         Directory to save screenshot     [string] [default: "data"]
+     -n, --name         Screenshot file name  [string] [default: "screenshot.jpeg"]
+     -f, --fullPage     Capture full page                [boolean] [default: false]
+     -t, --waterText    waterText                            [string] [default: ""]
+     -i, --waterImg     waterImg url                         [string] [default: ""]
+     -a, --appendChild  Add other elements                   [string] [default: ""]
+         --help         Show help                                         [boolean]
    ```
+
+**Request Example:**
+
+The following example shows how to use command line to operate, HTTP requests are similar, just modify accordingly.
+
+```shell
+# Default parameter request
+node cmd.js
+# http://127.0.0.1:1234
+
+# Specify website URL, width, height, and screenshot quality
+node cmd.js -u=https://eyunzhu.com -w=147 -h=78 -q=80
+# http://127.0.0.1:1234?u=https://eyunzhu.com&w=147&h=78&q=80
+
+# Specify the directory and name to save the screenshot, (note that the directory needs to exist and be writable)
+node cmd.js -p=data -n='hello.png'
+# http://127.0.0.1:1234?p=data&n=hello.png
+# http://127.0.0.1:1234?p=data&n=hello.png&d=1 (setting parameter d will download through the browser)
+
+# Add simple watermark image and watermark text
+node cmd.js -i='https://eyunzhu.com/logo.png' -t='This is a simple watermark'
+# http://127.0.0.1:1234?i=https%3A%2F%2Feyunzhu.com%2Flogo.png&t=This is a simple watermark
+
+# Add custom watermark
+node cmd.js -a '`<div style="width:100%;height: 100%;position: absolute;top:0;left:0;z-index: 9999;background-color: rgba(220, 210, 210, 0.18);"><h1>eyunzhu</h1><p style="color:#4d85ff">Welcome to use</p></div>`'
+# http://127.0.0.1:1234?a=`<div style="width:100%;height: 100%;position: absolute;top:0;left:0;z-index: 9999;background-color: rgba(220, 210, 210, 0.18);"><h1>eyunzhu</h1><p style="color:red">Welcome to use</p></div>`
+```
 
 ## Running Locally
 
@@ -133,3 +166,4 @@ cd webpage-screenshot
 ## More Information
 
 For more information, please visit [eyunzhu](https://eyunzhu.com/).
+

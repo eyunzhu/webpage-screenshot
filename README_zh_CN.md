@@ -1,8 +1,8 @@
 # [webpage-screenshot](https://github.com/eyunzhu/webpage-screenshot)
 
-一个用于网页截图及相关服务的Docker镜像，支持命令行和HTTP接口。使用node、puppeteer和chrome headless实现。
+一个用于网页截图,添加水印等相关服务的Docker镜像，支持命令行和HTTP接口。使用node、puppeteer和chrome headless实现。
 
-A Docker image for web page screenshot and related services, supporting both command line and HTTP interface. Implemented with node, puppeteer and chrome headless
+A Docker image for web page screenshot ,add watermark and related services, supporting both command line and HTTP interface. Implemented with node, puppeteer and chrome headless
 
 **[English documentation](https://github.com/eyunzhu/webpage-screenshot/blob/master/README.md)**
 
@@ -43,14 +43,14 @@ docker run -d -p 1234:80 --cap-add SYS_ADMIN --name screenshot-service eyunzhu/w
    使用以下URL获取指定网站的截图：
 
    ```shell
-   http://ip:{port}/?url=https://eyunzhu.com
+   http://ip:{port}/?u=https://eyunzhu.com
    ```
 
    #### 请求参数
 
    | 参数 | 描述                                                         | 默认值                                      |
    | ---- | ------------------------------------------------------------ | ------------------------------------------- |
-   | url  | 目标URL                                                      | [https://eyunzhu.com](https://eyunzhu.com/) |
+   | u    | 目标URL                                                      | [https://eyunzhu.com](https://eyunzhu.com/) |
    | w    | 截图宽度                                                     | 1470                                        |
    | h    | 截图高度                                                     | 780                                         |
    | q    | 截图质量百分比                                               | 100                                         |
@@ -58,6 +58,9 @@ docker run -d -p 1234:80 --cap-add SYS_ADMIN --name screenshot-service eyunzhu/w
    | p    | 服务器保存路径（如果非空，在服务器上保存图像，确保路径存在） |                                             |
    | n    | 图像名称                                                     | screenshot.jpeg                             |
    | f    | 如果非空，捕获完整页面                                       |                                             |
+   | t    | 水印文字文本 (若需自定义样式请使用`a`参数构建)               |                                             |
+   | i    | 水印图片网络地址 (若需自定义样式请使用`a`参数构建)           |                                             |
+   | a    | 添加其他元素，(可用于添加水印等，自由度较广)<br>示例：\`<div style="width:100%;height: 100%;position: absolute;top:0;left:0;z-index: 9999;background-color: rgba(220, 210, 210, 0.18);"><h1>忆云竹</h1><p style="color:#4d85ff">欢迎使用</p></div>\` |                                             |
 
 2. 通过命令行方式
 
@@ -72,15 +75,47 @@ docker run -d -p 1234:80 --cap-add SYS_ADMIN --name screenshot-service eyunzhu/w
    ```shell
    Options:
          --version   显示版本号                                           [布尔]
-     -u, --url       要截图的URL                       [字符串] [默认值: "https://eyunzhu.com"]
-     -w, --width     视口宽度                           [数字] [默认值: 1470]
-     -h, --height    视口高度                           [数字] [默认值: 780]
-     -q, --quality   截图质量                           [数字] [默认值: 100]
-     -p, --path      保存截图的目录                   [字符串] [默认值: "data"]
-     -n, --name      截图文件名称           [字符串] [默认值: "screenshot.jpeg"]
-     -f, --fullPage  捕获完整页面                       [布尔] [默认值: false]
+     -u, --url       要截图的URL         [字符串] [默认值: "https://eyunzhu.com"]
+     -w, --width     视口宽度                               [数字] [默认值: 1470]
+     -h, --height    视口高度                                [数字] [默认值: 780]
+     -q, --quality   截图质量                                [数字] [默认值: 100]
+     -p, --path      保存截图的目录                       [字符串] [默认值: "data"]
+     -n, --name      截图文件名称              [字符串] [默认值: "screenshot.jpeg"]
+     -f, --fullPage  捕获完整页面                            [布尔] [默认值: false]
+     -t, --waterText 水印文字                                 [字符串] [默认值: ""]
+     -i, --waterImg  水印图片网络地址                          [字符串] [默认值: ""]
+     -a, --appendChild 增加其他元素				                    [字符串] [默认值: ""]
          --help      显示帮助
    ```
+
+**请求示例**：
+
+下方示例使用命令行方式操作，http请求类似,对应更改即可
+
+```shell
+# 默认参数请求
+node cmd.js
+# http://127.0.0.1:1234
+
+# 指定网址、高宽、截图质量
+node cmd.js -u=https://eyunzhu.com -w=147 -h=78 -q=80
+# http://127.0.0.1:1234?u=https://eyunzhu.com&w=147&h=78&q=80
+
+# 指定截图保存的目录和名称,（此处注意目录需要存在且可写）
+node cmd.js -p=data -n='hello.png'
+# http://127.0.0.1:1234?p=data&n=hello.png
+# http://127.0.0.1:1234?p=data&n=hello.png&d=1 （设置参数d会通过浏览器下载）
+
+# 添加简单水印图片、水印文字
+node cmd.js -i='https://eyunzhu.com/logo.png' -t=这是一个简单的水印
+# http://127.0.0.1:1234?i=https%3A%2F%2Feyunzhu.com%2Flogo.png&t=这是一个简单的水印
+
+# 添加自定义水印
+node cmd.js -a '`<div style="width:100%;height: 100%;position: absolute;top:0;left:0;z-index: 9999;background-color: rgba(220, 210, 210, 0.18);"><h1>忆云竹</h1><p style="color:#4d85ff">欢迎使用</p></div>`'
+# http://127.0.0.1:1234?a=`<div style="width:100%;height: 100%;position: absolute;top:0;left:0;z-index: 9999;background-color: rgba(220, 210, 210, 0.18);"><h1>忆云竹</h1><p style="color:red">欢迎使用</p></div>`
+```
+
+
 
 ## 在本地电脑中使用的方法
 
